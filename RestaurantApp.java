@@ -1,15 +1,25 @@
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.Scanner;
 
 class Restaurant {
     private String name;
     private String cuisine;
     private double rating;
+    private double distance;
+    private double wait;
+    private String cost;
+    private String hours;
     // private fields
-    public Restaurant(String name, String cuisine, double rating) {
+    public Restaurant(String name, String cuisine, double rating, double distance, double wait, String cost, String hours) {
         this.name = name;
         this.cuisine = cuisine;
         this.rating = rating;
+        this.distance = distance;
+        this.wait = wait;
+        this.cost = cost;
+        this.hours = hours;
     }
     //setting fields if object is initialized with proper args
     public String getName() {
@@ -37,7 +47,7 @@ class Restaurant {
     }
     //setting rating via method
     public String toString() {
-        return ("Restaurant: "+this.name+"\n  Cuisine: "+this.cuisine+"\n  Rating: "+this.rating+" / 5.0");
+        return ("Restaurant: "+this.name+"\n  Cuisine: "+this.cuisine+"\n  Rating: "+this.rating+" / 5.0\n  Distance: "+this.distance+" miles\n  Wait time: "+this.wait+" minutes\n  Cost: "+this.cost+"\n  Hours: "+this.hours);
     }
     //method for returning a neatly formated string when object is called in main method
 }
@@ -45,10 +55,46 @@ class Restaurant {
 
 
 public class RestaurantApp {
+    public static void randRestaurant(ArrayList <Restaurant> a, Random b ) {
+
+        int randNum = b.nextInt(0,a.size()-1) ;
+        System.out.println(a.get(randNum));
+    }
+
+    public static void restauranttextinput(String filename, ArrayList <Restaurant> a ) {
+        Scanner textscanner = new Scanner(RestaurantApp.class.getResourceAsStream(filename));
+        // used getResourceAsStream rather than creating a new file object 
+        textscanner.useDelimiter(",");
+        int restnum = 0;
+        try {
+            while (textscanner.hasNextLine()){
+                String name1 = textscanner.next() ;
+                double rating1 = textscanner.nextDouble() ;
+                double dist1 = textscanner.nextDouble() ;
+                double wait1 = textscanner.nextDouble() ;
+                String cost1 = "$" + textscanner.next() ;
+                String hours1 = textscanner.next() ;
+                String cuisine1 = "N/A" ;
+                Restaurant restaurant = new Restaurant(name1, cuisine1, rating1, dist1, wait1, cost1, hours1 ) ;
+                a.add(restaurant);
+                System.out.println(a.get(restnum));
+                restnum ++ ;
+            }
+        } catch (NoSuchElementException e) {
+        }
+        textscanner.close();
+    }
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         ArrayList<Restaurant> restaurants = new ArrayList<>();
+
+        restauranttextinput("rest_text.txt", restaurants) ;
+
+        Random randomRest = new Random();
+        // instantiating a random object
+
+        Scanner scanner = new Scanner(System.in);
         // create a new scanner and arraylist to hold restaurant objects
+
         mainloop: while (true) {
             System.out.print("Enter restaurant name (e.g., Bistro Bella): ");
             String name = scanner.nextLine();
@@ -59,17 +105,32 @@ public class RestaurantApp {
             System.out.print("Enter rating on a 0-5 scale (e.g., 4.5): ");
             double rating = Double.parseDouble(scanner.nextLine());
 
-            Restaurant restaurant = new Restaurant(name, cuisine, rating);
+            System.out.print("Enter a distance (miles) to the restaurant (e.g., 2.1): ");
+            double distance = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Enter the average wait (minutes) (e.g., 7): ");
+            double wait = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Enter the averagae cost of a meal (e.g., 8.2): $");
+            String cost = "$"+ (scanner.nextLine());
+
+            System.out.print("Enter the hours of operation (e.g., 10:00am-6:00pm): ");
+            String hours = (scanner.nextLine());
+
+
+            Restaurant restaurant = new Restaurant(name, cuisine, rating, distance, wait, cost, hours);
             restaurants.add(restaurant);
+            //added new fields corresponding the txt doc
 
             System.out.println("\nAdded Restaurant:");
-            System.out.println(restaurants.get(0));
+            System.out.println(restaurants.get(restaurants.size()-1));
             // Prompt user for restaurant fields, then add new restaurant object to array list and print out restaurant in nice format
 
             loop: while (true) {
                 // main loop so that new restaurants can be created
                 System.out.println("To get a existing restaurants name, cuisine,rating, press 1.\n" +
-                        "To change a existing restaurants name, cuisine or rating, type 2. \nTo exit, type 3.\nTo create a new restaurant, type 4.");
+                        "To change a existing restaurants name, cuisine or rating, type 2. \nTo exit, type 3.\nTo create a new restaurant, type 4." +
+                        "To get a random restaurant, type 5.");
                 int treePrompt = Integer.parseInt(scanner.nextLine());
                 switch (treePrompt) {
                     // switch prompt tree to ask user if they want to create new restaurant, view or modify existing restaurants fields, or quit program.
@@ -134,6 +195,10 @@ public class RestaurantApp {
                     case 4:
                         break loop;
                         // exits choice tree to get back to restaurant creation
+                    case 5:
+                        randRestaurant(restaurants, randomRest);
+                        break;
+                        // gets and prints a random restaurant
                     default:
                         break;
                         // if the user enters an invalid answer
