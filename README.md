@@ -8,7 +8,7 @@ ArrayList
   - Creating a array list to hold newly created objects so that modifying and retrieving specific objects after they are created. This is done so access specifics objects can be done with its corresponding index, making it significantly easier to develop in the future. 
 toString()
   - adding a toString() method so that the get.(#) method for the array list returns a nicely formatted string so that when printed it is easily read  by the user. 
-#**Restaurant project part 2**
+# **Restaurant project part 2**
 Scan the text file to create Restaurant objects from the data
   - Using a scanner to scan the text in the .txt and properly processing each token to create a new restaurant for each set of data. This was done so that a large list of restaurants could be created and saved before running the program so that the user did not have to add all the restaurants each time the program is run.
 Add the Restaurants to an ArrayList
